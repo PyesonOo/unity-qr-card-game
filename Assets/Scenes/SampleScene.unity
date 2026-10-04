@@ -2337,8 +2337,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9afa967b37d7c74aa9d0f8c8982bbde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Player
-  maxLife: 5
-  currentLife: 5
+  maxLife: 20
+  currentLife: 20
   maxMana: 3
   currentMana: 3
   lifeBar: {fileID: 1546513619}
