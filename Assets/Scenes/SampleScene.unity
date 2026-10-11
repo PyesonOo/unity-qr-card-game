@@ -2392,6 +2392,20 @@ MonoBehaviour:
   currentLife: 50
   isDead: 0
   attackDamage: 5
+  weakAttacks:
+  - attackName: Laser
+    damage: 2
+  - attackName: Rakete
+    damage: 4
+  - attackName: Doppel Raketen
+    damage: 5
+  strongAttacks:
+  - attackName: Laser Salve
+    damage: 6
+  - attackName: Raketen Hagel
+    damage: 8
+  - attackName: Final Flash
+    damage: 10
   lifeBar: {fileID: 1883927570}
   enemyNameText: {fileID: 1180129686}
 --- !u!4 &1425645864
