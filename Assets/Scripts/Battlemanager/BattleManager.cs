@@ -75,7 +75,7 @@ public void StartPlayerTurn()
 
     if (Player.Instance != null)
     {
-        Player.Instance.currentMana += Player.Instance.maxMana;
+        Player.Instance.currentMana += Player.Instance.maxMana + Player.Instance.bonusManaPerTurn;
         Player.Instance.UpdateManaText(); // Wenn der Spielzug wieder anfängt, wird das gespeicherte Mana addiert
 
         Debug.Log(

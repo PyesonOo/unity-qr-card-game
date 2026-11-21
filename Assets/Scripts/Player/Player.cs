@@ -12,6 +12,9 @@ public class Player : MonoBehaviour
     public int maxMana = 3;
     public int currentMana = 3;
 
+    public int bonusManaPerTurn = 0;
+    public int bonusAttackDamage = 0;
+
     public Slider lifeBar;
 
     public TMP_Text currentCardText;

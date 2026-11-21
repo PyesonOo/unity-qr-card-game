@@ -23,6 +23,12 @@ public class AttackCardManager : MonoBehaviour
 
     public void ReceiveCard(string cardId)
     {
+        if (string.IsNullOrWhiteSpace(cardId))
+        {
+            Debug.Log("Karte ignoriert: Leere Karten-ID.");
+            return;
+        }
+
         if (BattleManager.Instance != null && BattleManager.Instance.IsBattleOver)
             return;
 
@@ -39,10 +45,22 @@ public class AttackCardManager : MonoBehaviour
             return;
         }
 
-        // Nur Angriffskarten verarbeiten
+        if (cardId.StartsWith("PWR_"))
+        {
+            ReceivePowerCard(cardId);
+            return;
+        }
+
+        // Angriffskarten wie bisher verarbeiten
         if (!cardId.StartsWith("ATK"))
         {
             Debug.Log("Keine Angriffskarte: " + cardId);
+            return;
+        }
+
+        if (AttackCardDaten.Instance == null || Player.Instance == null)
+        {
+            Debug.LogError("Angriff ignoriert: Kartendatenbank oder Player fehlt.");
             return;
         }
 
@@ -68,9 +86,12 @@ public class AttackCardManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("Gefundene Karte: " + card.name);
+        attackValue = card.attackValue + Player.Instance.bonusAttackDamage;
 
-        attackValue = card.attackValue;
+        Debug.Log("Gefundene Karte: " + card.name +
+            ". Basis-Schaden: " + card.attackValue +
+            ", Bonus: " + Player.Instance.bonusAttackDamage +
+            ", Gesamtschaden: " + attackValue);
 
         //Wenn wir kein Mana mehr haben
         if (Player.Instance.currentMana < card.manaCost)
@@ -112,10 +133,13 @@ Player.Instance.SetCurrentCard(card.name);
 Debug.Log("Player.SetCurrentCard wurde aufgerufen.");
         }
 
-        attackCardText.text =
+        if (attackCardText != null)
+        {
+            attackCardText.text =
             "Karte: " + currentAttackCard +
             "\nAngriff: " + attackValue +
             "\nGesammelt: " + collectedCards.Count;
+        }
 
         Debug.Log("Angriffskarte gespeichert: " + cardId);
 
@@ -127,6 +151,61 @@ Debug.Log("Player.SetCurrentCard wurde aufgerufen.");
             BattleManager.Instance.EndPlayerTurn();
         }
     }
+    private void ReceivePowerCard(string cardId)
+    {
+        if (PowerCardDaten.Instance == null || Player.Instance == null)
+        {
+            Debug.LogError("Power-Karte ignoriert: Kartendatenbank oder Player fehlt.");
+            return;
+        }
+
+        PowerCard card = PowerCardDaten.Instance.GetCard(cardId);
+        if (card == null)
+        {
+            Debug.Log("Power-Karte nicht in der Datenbank gefunden: " + cardId);
+            return;
+        }
+
+        if (card.manaCost < 0 ||
+            (card.powerType != PowerType.ManaBoost && card.powerType != PowerType.AttackBoost))
+        {
+            Debug.LogError("Power-Karte hat ungültige Daten: " + cardId);
+            return;
+        }
+
+        if (Player.Instance.currentMana < card.manaCost)
+        {
+            Debug.Log("Nicht genug Mana für Power-Karte: " + card.name);
+            return;
+        }
+
+        lastScannedCard = cardId;
+        Player.Instance.currentMana -= card.manaCost;
+
+        switch (card.powerType)
+        {
+            case PowerType.ManaBoost:
+                Player.Instance.bonusManaPerTurn += card.powerValue;
+                Debug.Log("Power-Karte aktiviert: " + card.name +
+                    ". Gesamtbonus Mana pro Runde: " + Player.Instance.bonusManaPerTurn);
+                break;
+            case PowerType.AttackBoost:
+                Player.Instance.bonusAttackDamage += card.powerValue;
+                Debug.Log("Power-Karte aktiviert: " + card.name +
+                    ". Gesamtbonus Angriffsschaden: " + Player.Instance.bonusAttackDamage);
+                break;
+        }
+
+        Player.Instance.UpdateManaText();
+
+        if (Player.Instance.currentMana == 0 &&
+            BattleManager.Instance != null && !BattleManager.Instance.IsBattleOver)
+        {
+            Debug.Log("Mana ist auf 0. Spielerzug wird beendet.");
+            BattleManager.Instance.EndPlayerTurn();
+        }
+    }
+
     public void ResetLastScannedCard()
 {
     lastScannedCard = "";
