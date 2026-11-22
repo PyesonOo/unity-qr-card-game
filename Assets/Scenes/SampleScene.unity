@@ -1018,6 +1018,8 @@ GameObject:
   - component: {fileID: 773190231}
   - component: {fileID: 773190230}
   - component: {fileID: 773190232}
+  - component: {fileID: 773190234}
+  - component: {fileID: 773190233}
   m_Layer: 0
   m_Name: AttackCardDaten
   m_TagString: Untagged
@@ -1064,6 +1066,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 548c362cb9398c3428bc62f214502caa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PowerCardDaten
+--- !u!114 &773190233
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773190229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0fdf1cb317350694d99201e3352f0022, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefenseCardManager
+--- !u!114 &773190234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 773190229}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f58c932382f467f45b292135bda5fa6b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DefenseCardDaten
 --- !u!1 &805956974
 GameObject:
   m_ObjectHideFlags: 0
@@ -2356,6 +2382,9 @@ MonoBehaviour:
   currentMana: 3
   bonusManaPerTurn: 0
   bonusAttackDamage: 0
+  hasActiveShield: 0
+  shieldWeakBlockPercent: 0
+  shieldStrongBlockPercent: 0
   lifeBar: {fileID: 1546513619}
   currentCardText: {fileID: 1207615189}
   manaText: {fileID: 1181566458}

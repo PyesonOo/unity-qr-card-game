@@ -51,6 +51,19 @@ public class AttackCardManager : MonoBehaviour
             return;
         }
 
+        if (cardId.StartsWith("DEF_"))
+        {
+            if (DefenseCardManager.Instance == null)
+            {
+                Debug.LogError("Verteidigungskarte ignoriert: DefenseCardManager fehlt.");
+                return;
+            }
+
+            lastScannedCard = cardId;
+            DefenseCardManager.Instance.ReceiveDefenseCard(cardId);
+            return;
+        }
+
         // Angriffskarten wie bisher verarbeiten
         if (!cardId.StartsWith("ATK"))
         {

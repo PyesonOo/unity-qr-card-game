@@ -89,7 +89,8 @@ public IEnumerator AttackPlayer()
     }
 
     bool isInRageMode = CheckRageMode();
-    EnemyAttack[] attackPool = isInRageMode ? strongAttacks : weakAttacks;
+    bool isStrongAttack = isInRageMode;
+    EnemyAttack[] attackPool = isStrongAttack ? strongAttacks : weakAttacks;
 
     if (attackPool == null || attackPool.Length == 0)
     {
@@ -107,11 +108,11 @@ public IEnumerator AttackPlayer()
         }
         else
         {
-            Player.Instance.TakeDamage(selectedAttack.damage);
+            Player.Instance.TakeEnemyAttack(selectedAttack.damage, isStrongAttack);
 
             Debug.Log(
                 "Enemy benutzt " + selectedAttack.attackName +
-                " und verursacht " + selectedAttack.damage + " Schaden."
+                " mit Basis-Schaden: " + selectedAttack.damage + "."
             );
         }
     }

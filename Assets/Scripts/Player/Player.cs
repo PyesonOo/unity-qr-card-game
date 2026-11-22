@@ -15,6 +15,10 @@ public class Player : MonoBehaviour
     public int bonusManaPerTurn = 0;
     public int bonusAttackDamage = 0;
 
+    public bool hasActiveShield = false;
+    public int shieldWeakBlockPercent = 0;
+    public int shieldStrongBlockPercent = 0;
+
     public Slider lifeBar;
 
     public TMP_Text currentCardText;
@@ -69,6 +73,38 @@ public void SetCurrentCard(string cardName)
     Debug.Log("Text erfolgreich gesetzt.");
 
     
+}
+
+public void TakeEnemyAttack(int damage, bool isStrongAttack)
+{
+    if (BattleManager.Instance != null && BattleManager.Instance.IsBattleOver)
+        return;
+
+    string attackType = isStrongAttack ? "Starker Angriff" : "Schwacher Angriff";
+
+    if (!hasActiveShield)
+    {
+        Debug.Log(attackType + ". Ursprünglicher Schaden: " + damage +
+            ". Blockwert: 0 %. Tatsächlich erhaltener Schaden: " + damage +
+            ". Kein aktiver Schild; kein Schild verbraucht.");
+        TakeDamage(damage);
+        return;
+    }
+
+    int blockPercent = Mathf.Clamp(
+        isStrongAttack ? shieldStrongBlockPercent : shieldWeakBlockPercent, 0, 100);
+    int finalDamage = Mathf.FloorToInt(damage * (100 - blockPercent) / 100f);
+
+    hasActiveShield = false;
+    shieldWeakBlockPercent = 0;
+    shieldStrongBlockPercent = 0;
+
+    Debug.Log(attackType + ". Ursprünglicher Schaden: " + damage +
+        ". Blockwert: " + blockPercent +
+        " %. Tatsächlich erhaltener Schaden: " + finalDamage +
+        ". Schild verbraucht; alle Schildwerte zurückgesetzt.");
+
+    TakeDamage(finalDamage);
 }
 
 public void TakeDamage(int damage)
